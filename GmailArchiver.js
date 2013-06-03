@@ -33,7 +33,8 @@ function init() {
  */
 function ScanGmail() {
   // Default Drive folder where to archive messages
-  var baseFolder = "Email Archive";
+  var baseFolderName = "Email Archive";
+  var baseFolder = DocsList.getFolder(baseFolderName);	
   
   // Get the label
   var label = GmailApp.getUserLabelByName("Archive to Drive");
@@ -49,23 +50,18 @@ function ScanGmail() {
         var messageAttachments = messagesArr[k].getAttachments();
         
         // Create the new folder to contain the message
-        var newFolderName = messageDate + " - " + messageFrom + " - " + messageSubject + " - " + messageId;
-        var newFolder = createDriveFolder(baseFolder, newFolderName);
-        
-        // Create the message PDF inside the new folder
-        var htmlBodyFile = newFolder.createFile('body.html', messageBody, "text/html");
-        var pdfBlob = htmlBodyFile.getAs('application/pdf');
-        pdfBlob.setName(newFolderName + ".pdf");
-        newFolder.createFile(pdfBlob);
-        htmlBodyFile.setTrashed(true);
-        
+		  try {
+			  var senderFolder = baseFolder.getFolder(messageFrom);
+		  } catch(e) {
+			  var senderFolder = baseFolder.createFolder(messageFrom);
+		  }
 
         // Save attachments
         for(var i = 0; i < messageAttachments.length; i++) {
             var attachmentName = messageAttachments[i].getName();
             var attachmentContentType = messageAttachments[i].getContentType();
             var attachmentBlob = messageAttachments[i].copyBlob();
-            newFolder.createFile(attachmentBlob);
+            senderFolder.createFile(attachmentBlob);
         }
 
       }
