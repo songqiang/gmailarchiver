@@ -46,6 +46,8 @@ function ScanGmail() {
         var messageBody = messagesArr[k].getBody();
         var messageAttachments = messagesArr[k].getAttachments();
         
+		if (messageAttachments.length > 0)
+		{
         // Create the new folder to contain the message
 		  var path = "Email Archive" + "/" + messageFrom;
 		  try {
@@ -53,6 +55,7 @@ function ScanGmail() {
 		  } catch(e) {
 			  var senderFolder = DocsList.createFolder(path);
 		  }
+		}
 
         // Save attachments
         for(var i = 0; i < messageAttachments.length; i++) {
