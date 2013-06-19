@@ -32,9 +32,6 @@ function init() {
  * Scan Gmail account for message archive requests
  */
 function ScanGmail() {
-  // Default Drive folder where to archive messages
-  var baseFolderName = "Email Archive";
-  var baseFolder = DocsList.getFolder(baseFolderName);	
   
   // Get the label
   var label = GmailApp.getUserLabelByName("Archive to Drive");
@@ -50,10 +47,11 @@ function ScanGmail() {
         var messageAttachments = messagesArr[k].getAttachments();
         
         // Create the new folder to contain the message
+		  var path = "Email Archive" + "/" + messageFrom;
 		  try {
-			  var senderFolder = baseFolder.getFolder(messageFrom);
+			  var senderFolder = DocsList.getFolder(path);
 		  } catch(e) {
-			  var senderFolder = baseFolder.createFolder(messageFrom);
+			  var senderFolder = DocsList.createFolder(path);
 		  }
 
         // Save attachments
