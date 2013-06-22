@@ -2,8 +2,8 @@
  * Main function run at spreadsheet opening
  */
 function onOpen() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var menuEntries = [ 
+		var ss = SpreadsheetApp.getActiveSpreadsheet();
+		var menuEntries = [ 
     {name: "Initialize", functionName: "init"},
     {name: "Archive Gmail Messages", functionName: "ScanGmail"}
   ];
@@ -33,6 +33,9 @@ function init() {
  */
 function ScanGmail() {
   
+  // log sender and the attachment name
+  var ss = SpreadsheetApp.getActiveSheet();
+
   // Get the label
   var label = GmailApp.getUserLabelByName("Archive to Drive");
     var threadsArr = getThreadsForLabel(label);
@@ -63,6 +66,10 @@ function ScanGmail() {
             var attachmentContentType = messageAttachments[i].getContentType();
             var attachmentBlob = messageAttachments[i].copyBlob();
             senderFolder.createFile(attachmentBlob);
+
+						ss.insertRows(2);
+						ss.getRange("A2").setValue(messageFrom);
+						ss.getRange("B2").setValue(attachmentName);
         }
 
       }
