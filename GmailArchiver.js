@@ -67,11 +67,10 @@ function ScanGmail() {
             var attachmentBlob = messageAttachments[i].copyBlob();
             senderFolder.createFile(attachmentBlob);
 
-						ss.insertRows(2);
-						ss.getRange("A2").setValue(messageFrom);
-						ss.getRange("B2").setValue(attachmentName);
+			ss.insertRows(2);
+			ss.getRange("A2").setValue(messageFrom);
+			ss.getRange("B2").setValue(attachmentName);
         }
-
       }
       // Remove Gmail label from archived thread
       label.removeFromThread(threadsArr[j]);
