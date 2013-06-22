@@ -2,14 +2,14 @@
  * Main function run at spreadsheet opening
  */
 function onOpen() {
-		var ss = SpreadsheetApp.getActiveSpreadsheet();
-		var menuEntries = [ 
-    {name: "Initialize", functionName: "init"},
-    {name: "Archive Gmail Messages", functionName: "ScanGmail"}
-  ];
-  ss.addMenu("Gmail Archiver", menuEntries);
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var menuEntries = [ 
+        {name: "Initialize", functionName: "init"},
+        {name: "Archive Gmail Messages", functionName: "ScanGmail"}
+    ];
+    ss.addMenu("Gmail Archiver", menuEntries);
 }
-    
+
 /**
  * Initialize the system
  */
@@ -19,10 +19,10 @@ function init() {
     
     // Create Google Drive folder if doesn't exists
     try {
-       var folder = DocsList.getFolder("Email Archive");
+        var folder = DocsList.getFolder("Email Archive");
     } catch(e) {
-       // Folder doesn't exists
-       DocsList.createFolder("Email Archive");
+        // Folder doesn't exists
+        DocsList.createFolder("Email Archive");
     }
     
     Browser.msgBox("Created Gmail label: Archive to Drive and Google Drive folder: Email Archive");
@@ -32,48 +32,48 @@ function init() {
  * Scan Gmail account for message archive requests
  */
 function ScanGmail() {
-  
-  // log sender and the attachment name
-  var ss = SpreadsheetApp.getActiveSheet();
-
-  // Get the label
-  var label = GmailApp.getUserLabelByName("Archive to Drive");
+    
+    // log sender and the attachment name
+    var ss = SpreadsheetApp.getActiveSheet();
+    
+    // Get the label
+    var label = GmailApp.getUserLabelByName("Archive to Drive");
     var threadsArr = getThreadsForLabel(label);
     for(var j=0; j<threadsArr.length; j++) {
-      var messagesArr = getMessagesforThread(threadsArr[j]);
-      for(var k=0; k<messagesArr.length; k++) {
-        var messageId = messagesArr[k].getId();
-        var messageDate = Utilities.formatDate(messagesArr[k].getDate(), Session.getTimeZone(), "dd/MM/yyyy - HH:mm:ss");
-        var messageFrom = messagesArr[k].getFrom();
-        var messageSubject = messagesArr[k].getSubject();
-        var messageBody = messagesArr[k].getBody();
-        var messageAttachments = messagesArr[k].getAttachments();
-        
-	if (messageAttachments.length > 0)
-	{
-        // Create the new folder to contain the message
-	  var path = "Email Archive" + "/" + messageFrom;
-	  try {
-		  var senderFolder = DocsList.getFolder(path);
-	  } catch(e) {
-		  var senderFolder = DocsList.createFolder(path);
-	  }
-	}
-
-        // Save attachments
-        for(var i = 0; i < messageAttachments.length; i++) {
-            var attachmentName = messageAttachments[i].getName();
-            var attachmentContentType = messageAttachments[i].getContentType();
-            var attachmentBlob = messageAttachments[i].copyBlob();
-            senderFolder.createFile(attachmentBlob);
-			
-			ss.insertRows(2);
-			ss.getRange("A2").setValue(messageFrom);
-			ss.getRange("B2").setValue(attachmentName);
+        var messagesArr = getMessagesforThread(threadsArr[j]);
+        for(var k=0; k<messagesArr.length; k++) {
+            var messageId = messagesArr[k].getId();
+            var messageDate = Utilities.formatDate(messagesArr[k].getDate(), Session.getTimeZone(), "dd/MM/yyyy - HH:mm:ss");
+            var messageFrom = messagesArr[k].getFrom();
+            var messageSubject = messagesArr[k].getSubject();
+            var messageBody = messagesArr[k].getBody();
+            var messageAttachments = messagesArr[k].getAttachments();
+            
+            if (messageAttachments.length > 0)
+            {
+                // Create the new folder to contain the message
+                var path = "Email Archive" + "/" + messageFrom;
+                try {
+                    var senderFolder = DocsList.getFolder(path);
+                } catch(e) {
+                    var senderFolder = DocsList.createFolder(path);
+                }
+            }
+            
+            // Save attachments
+            for(var i = 0; i < messageAttachments.length; i++) {
+                var attachmentName = messageAttachments[i].getName();
+                var attachmentContentType = messageAttachments[i].getContentType();
+                var attachmentBlob = messageAttachments[i].copyBlob();
+                senderFolder.createFile(attachmentBlob);
+                
+                ss.insertRows(2);
+                ss.getRange("A2").setValue(messageFrom);
+                ss.getRange("B2").setValue(attachmentName);
+            }
         }
-      }
-      // Remove Gmail label from archived thread
-      label.removeFromThread(threadsArr[j]);
+        // Remove Gmail label from archived thread
+        label.removeFromThread(threadsArr[j]);
     }
     Browser.msgBox("Gmail messages successfully archived to Google Drive");
 }
@@ -86,15 +86,15 @@ function ScanGmail() {
  * @return {GmailLabel[]} Array of GmailLabel objects
  */
 function scanLabels() {
-  // logs all of the names of your labels
-  var labels = GmailApp.getUserLabels();
-  var results = new Array();
-  for (var i = 0; i < labels.length; i++) {
-    if(labels[i].getName() == "Archive to Drive") {
-      results.push(labels[i]);
+    // logs all of the names of your labels
+    var labels = GmailApp.getUserLabels();
+    var results = new Array();
+    for (var i = 0; i < labels.length; i++) {
+        if(labels[i].getName() == "Archive to Drive") {
+            results.push(labels[i]);
+        }
     }
-  }
-  return results;
+    return results;
 }
 
 /**
@@ -104,8 +104,8 @@ function scanLabels() {
  * @return {GmailThread[]} an array of threads marked with this label
  */
 function getThreadsForLabel(label) {
-  var threads = label.getThreads();
-  return threads;
+    var threads = label.getThreads();
+    return threads;
 }
 
 /**
@@ -115,8 +115,8 @@ function getThreadsForLabel(label) {
  * @return {GmailMessage[]} an array of messages contained in the specified thread
  */
 function getMessagesforThread(thread) {
-  var messages = thread.getMessages();
-  return messages;
+    var messages = thread.getMessages();
+    return messages;
 }
 
 
@@ -126,17 +126,17 @@ function getMessagesforThread(thread) {
  * @return {Array} object's methods
  */
 function getMethods(obj) {
-  var result = [];
-  for (var id in obj) {
-    try {
-      if (typeof(obj[id]) == "function") {
-        result.push(id + ": " + obj[id].toString());
-      }
-    } catch (err) {
-      result.push(id + ": inaccessible");
+    var result = [];
+    for (var id in obj) {
+        try {
+            if (typeof(obj[id]) == "function") {
+                result.push(id + ": " + obj[id].toString());
+            }
+        } catch (err) {
+            result.push(id + ": inaccessible");
+        }
     }
-  }
-  return result;
+    return result;
 }
 
 /**
@@ -147,6 +147,6 @@ function getMethods(obj) {
  * @return {Folder} the folder object created representing the new folder 
  */
 function createDriveFolder(baseFolder, folderName) {
-  var baseFolderObject = DocsList.getFolder(baseFolder);
-  return baseFolderObject.createFolder(folderName);
+    var baseFolderObject = DocsList.getFolder(baseFolder);
+    return baseFolderObject.createFolder(folderName);
 }
