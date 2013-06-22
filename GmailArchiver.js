@@ -25,7 +25,8 @@ function init() {
         DocsList.createFolder("Email Archive");
     }
     
-    Browser.msgBox("Created Gmail label: Archive to Drive and Google Drive folder: Email Archive");
+    Browser.msgBox("Created Gmail label: Archive to Drive"
+                   + " and Google Drive folder: Email Archive");
 }
 
 /**
@@ -43,7 +44,9 @@ function ScanGmail() {
         var messagesArr = getMessagesforThread(threadsArr[j]);
         for(var k=0; k<messagesArr.length; k++) {
             var messageId = messagesArr[k].getId();
-            var messageDate = Utilities.formatDate(messagesArr[k].getDate(), Session.getTimeZone(), "dd/MM/yyyy - HH:mm:ss");
+            var messageDate = Utilities.formatDate(messagesArr[k].getDate(),
+                                                   Session.getTimeZone(),
+                                                   "dd/MM/yyyy - HH:mm:ss");
             var messageFrom = messagesArr[k].getFrom();
             var messageSubject = messagesArr[k].getSubject();
             var messageBody = messagesArr[k].getBody();
@@ -63,7 +66,6 @@ function ScanGmail() {
             // Save attachments
             for(var i = 0; i < messageAttachments.length; i++) {
                 var attachmentName = messageAttachments[i].getName();
-                var attachmentContentType = messageAttachments[i].getContentType();
                 var attachmentBlob = messageAttachments[i].copyBlob();
                 senderFolder.createFile(attachmentBlob);
                 
@@ -112,7 +114,9 @@ function getThreadsForLabel(label) {
  * Get all Gmail messages for the specified Gmail thread
  *
  * @param {GmailThread} thread object to get messages for
- * @return {GmailMessage[]} an array of messages contained in the specified thread
+ *
+ * @return {GmailMessage[]} an array of messages contained in the
+ * specified thread
  */
 function getMessagesforThread(thread) {
     var messages = thread.getMessages();
