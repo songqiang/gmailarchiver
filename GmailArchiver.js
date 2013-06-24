@@ -1,3 +1,8 @@
+/*
+ * Gmail Attachment Archiver
+ * Song Qiang <keeyang@ustc.edu>, 2013 
+ */
+
 /**
  * Main function run at spreadsheet opening
  */
